@@ -9,11 +9,11 @@ execSync('npm install parcel @parcel/transformer-sass --save-dev', { stdio: 'inh
 fs.mkdirSync('src');
 fs.mkdirSync('src/components');
 fs.mkdirSync('src/components/App');
-fs.mkdirSync('src/assets');
-fs.mkdirSync('src/assets/style');
-fs.mkdirSync('src/assets/img');
+fs.mkdirSync('public');
+fs.mkdirSync('public/img');
+fs.mkdirSync('public/fonts');
 
-fs.writeFileSync('src/index.html',
+fs.writeFileSync('public/index.html',
     `<!DOCTYPE html>
 <html lang="fr">
 
@@ -26,19 +26,21 @@ fs.writeFileSync('src/index.html',
 <body>
     <div id="root">
     </div>
-    <script type="module" src="./index.js"></script>
+    <script type="module" src="../src/index.js"></script>
 </body>
 
 </html>
 `);
 fs.writeFileSync('src/index.js',
     `import { createRoot } from "react-dom/client";
-import "./assets/style/reset.scss"
-import "./assets/style/style.scss"
+import "./reset.scss"
+import "./style.scss"
 import App from "./components/App";
 
 const container = document.getElementById("root");
+
 const root = createRoot(container);
+
 root.render(<App />);
 `);
 fs.writeFileSync('src/components/App/index.js',
@@ -55,7 +57,7 @@ const App = () => {
 
 export default App;`);
 
-fs.writeFileSync('src/assets/style/reset.scss',
+fs.writeFileSync('src/reset.scss',
     `html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -99,7 +101,7 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }`);
-fs.writeFileSync('src/assets/style/style.scss',
+fs.writeFileSync('src/style.scss',
     `body {
         font-family: 'Poppins', sans-serif;
         background-color: #333;
@@ -123,11 +125,14 @@ node_modules`)
 const packageJsonPath = 'package.json';
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
+
 packageJson.scripts = {
     ...packageJson.scripts,
-    "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "start": "parcel",
+    "build": "parcel build"
 };
+
+packageJson.source = "public/index.html";
 
 fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 // ?
